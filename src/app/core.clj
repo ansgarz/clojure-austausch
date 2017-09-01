@@ -56,10 +56,11 @@
 (defn domain-to-infra
   "docstring"
   [config]
-  (assoc config ::liferay "true"))
+  2)
 
 (s/fdef domain-to-infra
         :args (s/valid? ::my-config :config)
-        :ret (s/valid? ::my-config ::infra-config))
+        :ret vector?)
 
-(domain-to-infra invalid-config)
+(s/check-asserts true)
+(s/conform domain-to-infra (domain-to-infra "bla"))
