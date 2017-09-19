@@ -4,7 +4,7 @@ A small Clojure library designed to give examples for the clojure.spec library.
 
 ## Usage
 
-Run the example lines of the clojure code.
+Run the lines of the clojure code in the file src/app/core.clj
 
 ## License
 
