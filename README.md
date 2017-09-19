@@ -13,6 +13,7 @@ Copyright © 2017
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
 
+
 ## Additional Info/links about Clojure 1.9 and Clojure.spec
 
 Clojure 1.9 release notes: https://dev.clojure.org/jira/secure/ReleaseNote.jspa?projectId=10010&version=10750
