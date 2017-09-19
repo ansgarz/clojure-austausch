@@ -64,3 +64,78 @@
 
 (s/check-asserts true)
 (s/conform domain-to-infra (domain-to-infra "bla"))
+
+
+; ***** Generating data for test etc. *****
+;; Define sample functions
+(defn adder [x y] (+ x y))
+(defn adder-faulty [x y] (+ (+ x y) 1))
+
+;; Traditional Testing
+(use 'clojure.test)
+(deftest adder-test
+  (is (= 4 (adder 2 2)))
+  (is (= 7 (adder 3 4))))
+(deftest adder-faulty-test
+  (is (= 4 (adder-faulty 2 2)))
+  (is (= 7 (adder-faulty 3 4))))
+
+(run-tests 'app.core)
+
+;; Generating data
+;; Import libraries and
+(require '[clojure.spec.gen.alpha :as gen])
+
+;; generate a value for data types (spec/gen returns a generator)
+(gen/generate (s/gen int?))
+(gen/generate (s/gen nat-int?))
+(gen/generate (s/gen string?))
+
+;; generate a value for data structures (e.g. list/map resp. a vector)
+(gen/generate (s/gen (s/cat :a int? :b string?)))
+(gen/generate (s/gen (s/tuple int? string?)))
+
+;; generate complexer data structure
+(s/def ::street string?)
+(s/def ::street-nbr (s/int-in 0 9999))
+(s/def ::address (s/keys :req [::street ::street-nbr]))
+(gen/generate (s/gen ::address))
+
+;; generate a list of data for a data type
+(gen/sample (s/gen int?))
+
+;; generate values from a set
+(gen/sample (s/gen #{:a :b 10 11 "ten" "eleven"}))
+
+;; Testing
+;; test or call a function with generated values
+(adder (gen/generate (s/gen int?)) (gen/generate (s/gen int?)))
+(adder-faulty (gen/generate (s/gen int?)) (gen/generate (s/gen int?)))
+
+;; generate input values for a spec'd function and call the function
+(s/fdef adder
+  :args (s/cat :x int? :y int?)
+  :ret int?
+  :fn #(= (-> :ret %) (+ (-> % :args :x) (-> % :args :y))))
+(s/exercise-fn `adder)
+
+(s/fdef adder-faulty
+  :args (s/cat :x int? :y int?)
+  :ret int?
+  :fn #(= (-> :ret %) (+ (-> % :args :x) (-> % :args :y))))
+(s/exercise-fn `adder-faulty)
+
+; Instrumenting and Testing
+(require '[clojure.spec.test.alpha :as stest])
+
+;; without using the function spec
+(adder 0.5 0.5)
+
+;; using the function spec
+(stest/instrument `adder)
+(adder 0.5 0.5)   ;resulting in error due to not using int parameters
+
+;; check a function: generate arguments based on the :args spec for a function,
+;;invoke the function, and check that the :ret and :fn specs were satisfied.
+(stest/abbrev-result (first (stest/check `adder)) )
+(stest/abbrev-result (first (stest/check `adder-faulty)) )
