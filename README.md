@@ -1,6 +1,6 @@
 # app
 
-A Clojure library designed to give examples for the clojure.spec library.
+A small Clojure library designed to give examples for the clojure.spec library.
 
 ## Usage
 
