@@ -1,5 +1,6 @@
 (ns app.core
-  (:require [clojure.spec.alpha :as s]))
+  (:require
+    [clojure.spec.alpha :as s]))
 
 ;; define map with spec
 (s/def ::my-config
@@ -22,7 +23,7 @@
 ;; we can validate configs to return a boolean like so
 (s/valid? ::my-config valid-config)
 (s/valid? ::my-config invalid-config)
-;; or we can conform a schema and value and let the value be returned upon successs
+;; or we can conform a schema and value and let the value be returned upon success
 (s/conform ::my-config valid-config)
 (s/conform ::my-config invalid-config)
 ;; and we can describe a schema
@@ -56,14 +57,19 @@
 (defn domain-to-infra
   "docstring"
   [config]
+  (println (type config))
   2)
 
-(s/fdef domain-to-infra
-        :args (s/valid? ::my-config :config)
-        :ret vector?)
 
-(s/check-asserts true)
-(s/conform domain-to-infra (domain-to-infra "bla"))
+;;cat takes pairs of key + predicate
+(s/fdef domain-to-infra
+        :args (s/cat :config string?)
+        :ret int?)
+
+
+;;(s/conform domain-to-infra (domain-to-infra "bla"))
+(stest/instrument `domain-to-infra)
+(domain-to-infra "string")
 
 
 ; ***** Generating data for test etc. *****
