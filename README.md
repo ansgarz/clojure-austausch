@@ -19,6 +19,7 @@ your option) any later version.
 Clojure 1.9 release notes: https://dev.clojure.org/jira/secure/ReleaseNote.jspa?projectId=10010&version=10750
 
 About Clojure spec: https://clojure.org/about/spec
+
 Clojure spec guide: https://clojure.org/guides/spec
 
 Clojure spec screencast: https://www.youtube.com/watch?v=nqY4nUMfus8&list=PLZdCLR02grLrju9ntDh3RGPpWSWBvjwXg
